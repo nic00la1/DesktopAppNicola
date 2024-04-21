@@ -29,7 +29,7 @@ namespace DesktopAppNicola.UI
                 }
                 catch
                 {
-                    Console.WriteLine("Nieprawidlowa wartosc, sprobuj ponownie");
+                    Utility.WyswietlWiadomosc("Niepoprawne dane, sprobuj ponownie", false);
                 }
             }
             return default;

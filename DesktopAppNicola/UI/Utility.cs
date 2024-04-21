@@ -1,9 +1,11 @@
-﻿using System.Text;
+﻿using System.Globalization;
+using System.Text;
 
 namespace DesktopAppNicola.UI
 {
     public static class Utility
     {
+        private static CultureInfo culture = new CultureInfo("pl-PL"); // Ustawienie kultury na PL (Waluta)
         public static string SzyfrujZnaki(string prompt)
         {
             bool jestWpisany = true;
@@ -78,6 +80,13 @@ namespace DesktopAppNicola.UI
         {
             Console.WriteLine("\n\n Wcisnij Enter aby kontynuowac");
             Console.ReadLine();
+        }
+
+        public static string FormatujKwote(decimal kwota)
+        {
+            // 3 argumenty = 1. symbol waruty, 2. Formatowanie
+            // (2 miejsca po przecinku), 3. Kwota (ktora ma byc sformatowana)
+            return String.Format(culture, "{0:C2}", kwota);
         }
     }
 }

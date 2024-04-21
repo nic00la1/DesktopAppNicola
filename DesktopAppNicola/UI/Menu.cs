@@ -2,10 +2,16 @@
 {
     public class Menu
     {
-        static string[] pozycjeMenu = { "W jakim banku chcesz zalozyc konto?", "Wyloguj" };
+        static string[] pozycjeMenu = { "Sprawdz saldo konta", "Wyloguj" };
         static int aktywnaPozycjaMenu = 0; // Zacznij od pierwszej pozycji
+        private Program program;
 
-        public static void StartMenu()
+        public Menu(Program program)
+        {
+            this.program = program;
+        }
+
+        public void StartMenu()
         {
             Console.Title = "Bankomat";
             Console.CursorVisible = false; // Ukryj kursor podczas wyboru opcji
@@ -20,7 +26,7 @@
             }
         }
 
-        private static void PokazMenu()
+        private void PokazMenu()
         {
             Console.BackgroundColor = ConsoleColor.Gray;
             Console.Clear(); // Wyczysc ekran
@@ -46,7 +52,7 @@
             }
         }
 
-        private static void WybieranieOpcji()
+        private void WybieranieOpcji()
         {
             do
             {
@@ -77,14 +83,12 @@
             while (true);
         }
 
-        private static void UruchomOpcje()
+        private void UruchomOpcje()
         {
-            Program program = new Program();
-
             switch (aktywnaPozycjaMenu)
             {
                 case 0:
-                    opcjaWBudowie();
+                    program.Sprawdz_Swoje_Saldo();
                     break;
                 case 1:
                     AppScreen.WylogujProgress();
@@ -94,7 +98,7 @@
             }
         }
 
-        private static void opcjaWBudowie()
+        private void opcjaWBudowie()
         {
             // Kursor 12 kolumna, 4 wiersz
             Console.SetCursorPosition(12, 4);

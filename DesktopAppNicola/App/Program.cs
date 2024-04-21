@@ -2,7 +2,7 @@
 using DesktopAppNicola.Klasy;
 using DesktopAppNicola.UI;
 
-public class Program : IUserLogin
+public class Program : IUserLogin, IUserAccountActions
 {
     private List<UserAccount> listaUzytkownikow;
     private UserAccount wybranyUzytkownik;
@@ -12,7 +12,11 @@ public class Program : IUserLogin
         AppScreen.Powitanie();
         Sprawdz_Num_Karty_Klienta_I_Haslo();
         AppScreen.Powitaj_Zalogowanego_Uzytkownika(wybranyUzytkownik.FullName);
-        Menu.StartMenu();
+        // Tworzy nowy obiekt Menu i przekazuje do niego obecny obiekt Program
+        // jako argument konstruktora, poniewaz Menu potrzebuje dostepu do metod
+        // w obiekcie Program
+        Menu menu = new Menu(this);
+        menu.StartMenu();
     }
 
     public void InicjalizujDane()
@@ -106,5 +110,29 @@ public class Program : IUserLogin
                 Console.Clear();
             }
         }
+    }
+
+    public void Sprawdz_Swoje_Saldo()
+    {
+        if (wybranyUzytkownik != null) // Jesli uzytkownik nie jest nullem
+        {
+            Utility.WyswietlWiadomosc($"Twoje saldo wynosi: " +
+           $"{Utility.FormatujKwote(wybranyUzytkownik.AccountBalance)}");
+        }
+        else
+        {
+            Utility.WyswietlWiadomosc("Nie wybrano uzytkownika");
+        }
+
+    }
+
+    public void Wplac_Pieniadze()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void Wyplac_Pieniadze()
+    {
+        throw new NotImplementedException();
     }
 }

@@ -1,0 +1,13 @@
+﻿Celem mojego programu jest zarzadzanie systemem bankowym. W ktorym mozemy wybrac opcje:
+1. W jakim banku chcesz zalozyc konto? (Pokaze nam liste bankow, w ktorych mozemy zalozyc konto, opis zachecajacy klienta do wybrania wlasnie 
+ich banku)
+2. Dodać nowego klienta (Wprowadzamy dane klienta, ktory chce zalozyc konto w wybranym banku)
+3. Wpłacić pieniądze na konto
+4. Wypłacić pieniądze z konta 
+5. Sprawdzić stan konta 
+6. Przelew pieniedzy na konto innego klienta
+7. Wziasc kredyt
+8. Splacic kredyt
+9. Zobaczyc liste klientow danego banku
+10. Zobaczyc ranking bankow w ktorym jest najwiecej klientow i najwiecej ulokowanych pieniedzy
+11. Wyjscie z programu

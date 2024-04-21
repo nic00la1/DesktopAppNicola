@@ -1,7 +1,9 @@
-﻿class Program
+﻿using DesktopAppNicola.Klasy;
+
+class Program
 {
     static void Main(string[] args)
     {
-        Console.WriteLine("Hello World!");
+        Menu.StartMenu();
     }
 }

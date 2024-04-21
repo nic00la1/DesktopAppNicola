@@ -1,13 +1,13 @@
-﻿namespace DesktopAppNicola.Klasy
+﻿namespace DesktopAppNicola.UI
 {
-    internal class Menu
+    public class Menu
     {
         static string[] pozycjeMenu = { "W jakim banku chcesz zalozyc konto?", "Zakoncz program" };
         static int aktywnaPozycjaMenu = 0; // Zacznij od pierwszej pozycji
 
         public static void StartMenu()
         {
-            Console.Title = "System zarzadzania bankiem";
+            Console.Title = "Bankomat";
             Console.CursorVisible = false; // Ukryj kursor podczas wyboru opcji
 
             /*Petla dla metod potrzebnych do dzialania menu,
@@ -25,7 +25,7 @@
             Console.BackgroundColor = ConsoleColor.Gray;
             Console.Clear(); // Wyczysc ekran
             Console.ForegroundColor = ConsoleColor.DarkGreen;
-            Console.WriteLine(">>> System Zarzadzania Bankiem <<<\n");
+            Console.WriteLine(">>> Bankomat <<<\n");
 
             for (int i = 0; i < pozycjeMenu.Length; i++) // Petla dla kazdej pozycji menu
             {
@@ -53,7 +53,7 @@
                 ConsoleKeyInfo klawisz = Console.ReadKey(); // Pobierz klawisz od uzytkownika
                 if (klawisz.Key == ConsoleKey.UpArrow) // strzalka w gore, 
                 {
-                    aktywnaPozycjaMenu = (aktywnaPozycjaMenu > 0) ? aktywnaPozycjaMenu - 1 : pozycjeMenu.Length - 1;
+                    aktywnaPozycjaMenu = aktywnaPozycjaMenu > 0 ? aktywnaPozycjaMenu - 1 : pozycjeMenu.Length - 1;
                     //Jesli pozycja na samej gorze = podswietlenie przejdzie do samego konca 
                     PokazMenu();
                 }
@@ -82,7 +82,6 @@
             switch (aktywnaPozycjaMenu)
             {
                 case 0:
-                    Console.Clear();
                     opcjaWBudowie();
                     break;
                 case 1:

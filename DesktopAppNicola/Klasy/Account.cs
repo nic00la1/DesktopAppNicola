@@ -1,6 +1,6 @@
 ﻿namespace DesktopAppNicola.Klasy
 {
-    internal class Account // Klasa reprezentujaca konto bankowe
+    public class Account // Klasa reprezentujaca konto bankowe
     {
         public string? AccountNumber { get; set; } // Numer konta bankowego
         public string? AccountType { get; set; } // Typ konta bankowego

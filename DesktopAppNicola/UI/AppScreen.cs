@@ -36,5 +36,14 @@ namespace DesktopAppNicola.UI
             Console.WriteLine("\nSprawdzanie numeru karty i PIN'u...");
             Utility.WyswietlAnimacjeKropek();
         }
+
+        internal static void Wyswietl_Komunikat_O_Zablokowanym_Koncie()
+        {
+            Console.Clear();
+            Utility.WyswietlWiadomosc("Twoje konto jest zablokowane. Skontaktuj sie " +
+                "ze swoim najblizszym bankiem, aby je odblokowac. Dziekujemy, Firma XYZ :(", true);
+
+            Environment.Exit(1); // Zakoncz program
+        }
     }
 }

@@ -33,7 +33,9 @@ namespace DesktopAppNicola.UI
                 }
                 // Jesli wcisnieto backspace i input jest wiekszy niz 0
                 if (inputKey.Key == ConsoleKey.Backspace && input.Length > 0)
+                {
                     input.Remove(input.Length - 1, 1); // Usun ostatni znak z inputu
+                }
                 else if (inputKey.Key != ConsoleKey.Backspace)
                 // Jesli wcisnieto inny klawisz niz backspace
                 {

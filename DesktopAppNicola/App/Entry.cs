@@ -1,6 +1,6 @@
 ﻿using DesktopAppNicola.UI;
 
-namespace DesktopAppNicola.Klasy
+namespace DesktopAppNicola.App
 {
     class Entry
     {
@@ -9,7 +9,9 @@ namespace DesktopAppNicola.Klasy
             AppScreen.Powitanie();
             Program program = new Program(); // Program to klasa z pliku Program.cs
 
-            program.SprawdzNumKartyKlientaIHaslo();
+            program.InicjalizujDane();
+            program.Sprawdz_Num_Karty_Klienta_I_Haslo();
+            program.Powitaj_Zalogowanego_Uzytkownika();
 
             Utility.WcisnijEnterByKontynuowac();
         }

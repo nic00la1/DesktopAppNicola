@@ -2,6 +2,6 @@
 {
     public interface IUserLogin
     {
-        void SprawdzNumKartyKlientaIHaslo();
+        void Sprawdz_Num_Karty_Klienta_I_Haslo();
     }
 }

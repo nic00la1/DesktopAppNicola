@@ -61,6 +61,16 @@ namespace DesktopAppNicola.UI
             return Console.ReadLine();
         }
 
+        public static void WyswietlAnimacjeKropek(int timer = 10)
+        {
+            for (int i = 0; i < timer; i++) // Wyswietlenie 10 kropek co 200ms
+            {
+                Console.Write(".");
+                Thread.Sleep(200); // 1000ms = 1s (Wyswietlenie kropki co 200ms)
+            }
+            Console.Clear();
+        }
+
         public static void WcisnijEnterByKontynuowac()
         {
             Console.WriteLine("\n\n Wcisnij Enter aby kontynuowac");

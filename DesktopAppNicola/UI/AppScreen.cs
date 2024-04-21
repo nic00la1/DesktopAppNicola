@@ -1,4 +1,6 @@
-﻿namespace DesktopAppNicola.UI
+﻿using DesktopAppNicola.Klasy;
+
+namespace DesktopAppNicola.UI
 {
     public static class AppScreen
     {
@@ -15,6 +17,24 @@
 
             Console.WriteLine("\n\n Wcisnij Enter aby kontynuowac");
             Console.ReadLine();
+        }
+
+        // internal oznacza, ze metoda jest dostepna tylko w tym podzespole (UI)
+        internal static UserAccount UserLoginForm()
+        {
+            // Tymczasowe konto uzytkownika
+            UserAccount tempUserAccount = new UserAccount();
+
+            tempUserAccount.CardNumber = Walidacja.Convert<long>("twoj numer karty");
+            tempUserAccount.CardPin = Convert.ToInt32(Utility.SzyfrujZnaki("Wprowadz swoj pin do karty"));
+
+            return tempUserAccount; // Zwroc tymczasowe konto uzytkownika
+        }
+
+        internal static void LoginProgress()
+        {
+            Console.WriteLine("\nSprawdzanie numeru karty i PIN'u...");
+            Utility.WyswietlAnimacjeKropek();
         }
     }
 }

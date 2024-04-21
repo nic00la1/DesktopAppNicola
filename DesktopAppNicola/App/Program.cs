@@ -47,20 +47,8 @@ class Program : IUserLogin
     public void SprawdzNumKartyKlientaIHaslo()
     {
         bool czyPoprawnyLogin = false;
+        UserAccount inputAccount = AppScreen.UserLoginForm(); // Pobiera dane z formularza logowania
 
-        // Tymczasowe konto uzytkownika
-        UserAccount tempUserAccount = new UserAccount();
-
-        tempUserAccount.CardNumber = Walidacja.Convert<long>("twoj numer karty");
-        tempUserAccount.CardPin = Convert.ToInt32(Utility.SzyfrujZnaki("Wprowadz swoj pin do karty"));
-
-        Console.WriteLine("\nSprawdzanie numeru karty i PIN'u...");
-        int timer = 10;
-        for (int i = 0; i < timer; i++) // Wyswietlenie 10 kropek co 200ms
-        {
-            Console.Write(".");
-            Thread.Sleep(200); // 1000ms = 1s (Wyswietlenie kropki co 200ms)
-        }
-        Console.Clear();
+        AppScreen.LoginProgress();
     }
 }

@@ -5,7 +5,7 @@ class Program
     static void Main(string[] args)
     {
         AppScreen.Powitanie();
-        string cardNumber = Utility.OdbierzDaneUzytkownika("swoj numer karty");
+        long cardNumber = Walidacja.Convert<long>("twoj numer karty");
         Console.WriteLine($"Twoj numer karty to: {cardNumber}");
 
         Utility.WcisnijEnterByKontynuowac();

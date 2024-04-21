@@ -7,6 +7,14 @@ public class Program : IUserLogin
     private List<UserAccount> listaUzytkownikow;
     private UserAccount wybranyUzytkownik;
 
+    public void Run()
+    {
+        AppScreen.Powitanie();
+        Sprawdz_Num_Karty_Klienta_I_Haslo();
+        AppScreen.Powitaj_Zalogowanego_Uzytkownika(wybranyUzytkownik.FullName);
+        Menu.StartMenu();
+    }
+
     public void InicjalizujDane()
     {
         listaUzytkownikow = new List<UserAccount>
@@ -98,10 +106,5 @@ public class Program : IUserLogin
                 Console.Clear();
             }
         }
-    }
-
-    public void Powitaj_Zalogowanego_Uzytkownika()
-    {
-        Console.WriteLine($"Witaj ponownie, {wybranyUzytkownik.FullName}!");
     }
 }

@@ -1,19 +1,12 @@
-﻿using DesktopAppNicola.UI;
-
-namespace DesktopAppNicola.App
+﻿namespace DesktopAppNicola.App
 {
     class Entry
     {
         static void Main(string[] args)
         {
-            AppScreen.Powitanie();
             Program program = new Program(); // Program to klasa z pliku Program.cs
-
             program.InicjalizujDane();
-            program.Sprawdz_Num_Karty_Klienta_I_Haslo();
-            program.Powitaj_Zalogowanego_Uzytkownika();
-
-            Utility.WcisnijEnterByKontynuowac();
+            program.Run(); // Uruchamia program rozpoczynajac od ekranu powitalnego i logowania
         }
     }
 }

@@ -2,7 +2,7 @@
 {
     public class Menu
     {
-        static string[] pozycjeMenu = { "W jakim banku chcesz zalozyc konto?", "Zakoncz program" };
+        static string[] pozycjeMenu = { "W jakim banku chcesz zalozyc konto?", "Wyloguj" };
         static int aktywnaPozycjaMenu = 0; // Zacznij od pierwszej pozycji
 
         public static void StartMenu()
@@ -79,13 +79,17 @@
 
         private static void UruchomOpcje()
         {
+            Program program = new Program();
+
             switch (aktywnaPozycjaMenu)
             {
                 case 0:
                     opcjaWBudowie();
                     break;
                 case 1:
-                    Environment.Exit(0);
+                    AppScreen.WylogujProgress();
+                    Utility.WyswietlWiadomosc("Udane wylogowanie. Prosze wyjac karte z bankomatu");
+                    program.Run();
                     break;
             }
         }

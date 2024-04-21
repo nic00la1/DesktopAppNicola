@@ -45,5 +45,18 @@ namespace DesktopAppNicola.UI
 
             Environment.Exit(1); // Zakoncz program
         }
+
+        internal static void Powitaj_Zalogowanego_Uzytkownika(string fullname)
+        {
+            Console.WriteLine($"Witaj ponownie, {fullname}!");
+            Utility.WcisnijEnterByKontynuowac();
+        }
+
+        internal static void WylogujProgress()
+        {
+            Console.WriteLine("Dziekujemy za skorzystanie z uslug naszego bankomatu!");
+            Utility.WyswietlAnimacjeKropek();
+            Console.Clear();
+        }
     }
 }

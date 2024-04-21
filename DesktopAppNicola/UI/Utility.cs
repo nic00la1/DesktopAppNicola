@@ -50,7 +50,7 @@ namespace DesktopAppNicola.UI
         public static void WyswietlWiadomosc(string msg, bool success = true)
         {
             if (success)
-                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.ForegroundColor = ConsoleColor.DarkYellow;
             else
                 Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine(msg);

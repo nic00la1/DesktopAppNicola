@@ -9,15 +9,15 @@ namespace DesktopAppNicola.UI
             bool jestWpisany = true;
             string gwiazdki = "";
 
-            StringBuilder input = new StringBuilder();
+            StringBuilder input = new StringBuilder(); // stringbuilder przechowuje wprowadzone znaki
 
-            while (true)
+            while (true) // dopoki uzytkownik nie wprowadzi 6 znakow (poprawnego pinu)
             {
                 if (jestWpisany)
                     Console.WriteLine(prompt);
                 jestWpisany = false;
 
-                ConsoleKeyInfo inputKey = Console.ReadKey(true); // Wcisnij dowolny klawisz
+                ConsoleKeyInfo inputKey = Console.ReadKey(true); // Wcisnij dowolny klawisz, parametr true ukrywa wprowadzane znaki
 
                 if (inputKey.Key == ConsoleKey.Enter)
                 {
@@ -35,6 +35,7 @@ namespace DesktopAppNicola.UI
                 if (inputKey.Key == ConsoleKey.Backspace && input.Length > 0)
                 {
                     input.Remove(input.Length - 1, 1); // Usun ostatni znak z inputu
+                    Console.Write("\b \b"); // Usun ostatni znak z konsoli
                 }
                 else if (inputKey.Key != ConsoleKey.Backspace)
                 // Jesli wcisnieto inny klawisz niz backspace

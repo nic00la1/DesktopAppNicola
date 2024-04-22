@@ -2,7 +2,7 @@
 
 namespace DesktopAppNicola.UI
 {
-    public static class AppScreen
+    public class AppScreen
     {
         internal const string waluta = "PLN";
         internal static void Powitanie()
@@ -105,6 +105,22 @@ namespace DesktopAppNicola.UI
                     return -1;
                     break;
             }
+        }
+        internal InternalTransfer Formularz_Do_Przelewu()
+        {
+            // nowy obiekt klasy InternalTransfer
+            var przelewMiedzyKontami = new InternalTransfer();
+
+            przelewMiedzyKontami.RecipeintBankAccountNumber =
+                Walidacja.Convert<long>("numer konta odbiorcy");
+
+            przelewMiedzyKontami.TransferAmount =
+                Walidacja.Convert<decimal>($"kwote {waluta}");
+
+            przelewMiedzyKontami.RecipeintBankAccountName =
+                Utility.OdbierzDaneUzytkownika("nazwe odbiorcy: ");
+
+            return przelewMiedzyKontami;
         }
     }
 }

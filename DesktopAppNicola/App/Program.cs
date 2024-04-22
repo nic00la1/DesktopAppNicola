@@ -319,4 +319,93 @@ public class Program : IUserLogin, IUserAccountActions, ITransaction
     {
         throw new NotImplementedException();
     }
+
+    public void Process_Przelewu_Miedzy_Kontami(
+        InternalTransfer przelewMiedzyKontami)
+    {
+        if (przelewMiedzyKontami.TransferAmount <= 0)
+        {
+            Utility.WyswietlWiadomosc("Kwota musi byc wieksza niz 0." +
+                               "Sprobuj ponownie", false);
+            return;
+        }
+        // Sprawdz saldo uzytkownika
+        if (przelewMiedzyKontami.TransferAmount
+            > wybranyUzytkownik.AccountBalance)
+        {
+            Utility.WyswietlWiadomosc("Nie masz wystarczajaco srodkow na koncie!" +
+                $"Twoje saldo wynosi {Utility.FormatujKwote(wybranyUzytkownik.AccountBalance)}", false);
+            return;
+        }
+        // Sprawdz czy minimalna kwota na koncie
+        // zostanie zachowana po przelewie
+        if ((wybranyUzytkownik.AccountBalance - minimalna_kwota_na_koncie)
+            < minimalna_kwota_na_koncie)
+        {
+            Utility.WyswietlWiadomosc
+                ("Nie mozesz wykonac tego przelewu. " +
+                "Twoje saldo musi miec zachowane " +
+                $"minimum {Utility.FormatujKwote(minimalna_kwota_na_koncie)}"
+                , false);
+            return;
+        }
+        // Sprawdz czy numer konta odbiorcy jest poprawny, 
+        // jesli nie, zwroc null 
+        var wybrane_Konto_Odbiorcy = (from kontoUsera in listaUzytkownikow
+                                      where kontoUsera.AccountNumber
+                                      == przelewMiedzyKontami.RecipeintBankAccountNumber
+                                      select kontoUsera).FirstOrDefault(); // Pobiera pierwszy element z listy lub null
+
+        if (wybrane_Konto_Odbiorcy == null)
+        {
+            Utility.WyswietlWiadomosc("Przelew przerwany! "
+                + "Nie znaleziono konta odbiorcy. "
+                + "Sprobuj ponownie", false);
+            return;
+        }
+
+        // Sprawdz Nazwe konta odbiorcy
+        if (wybrane_Konto_Odbiorcy.FullName
+            != przelewMiedzyKontami.RecipeintBankAccountName)
+        {
+            Utility.WyswietlWiadomosc("Przelew przerwany! " +
+                "Nazwa odbiorcy jest niepoprawna.", false);
+            return;
+        }
+
+        // Dodaj transakcje do listy transakcji
+        // (wysylanie rekordu przelewu) (nadawca)
+        Wprowadz_Transakcje
+            (
+            wybranyUzytkownik.Id,
+            TransactionType.Przelew,
+            -przelewMiedzyKontami.TransferAmount, // Ujemna kwota oznacza pieniadze przekazane
+                                                  // na konto odbiorcy
+            $"Przelew na konto: {wybrane_Konto_Odbiorcy.AccountNumber}" +
+            $"({wybrane_Konto_Odbiorcy.FullName})" // opis transakcji
+            );
+
+        // Aktualizuj saldo uzytkownika, wysylajacego przelew (nadawcy)
+        wybranyUzytkownik.AccountBalance -= przelewMiedzyKontami.TransferAmount;
+
+        // Dodaj transakcje do listy transakcji
+        // (otrzymywanie rekordu przelewu) (odbiorca)
+        Wprowadz_Transakcje(
+                wybrane_Konto_Odbiorcy.Id,
+                TransactionType.Przelew,
+                przelewMiedzyKontami.TransferAmount, // Dodatnia kwota oznacza pieniadze otrzymane
+                $"Przelew od: {wybranyUzytkownik.AccountNumber}" +
+                $"({wybranyUzytkownik.FullName})" // opis transakcji
+            );
+
+        // Aktualizuj saldo uzytkownika, (odbiorcy przelewu)
+        wybrane_Konto_Odbiorcy.AccountBalance += przelewMiedzyKontami.TransferAmount;
+
+        // Wyswietl komunikat o sukcesie
+        Utility.WyswietlWiadomosc("Udalo sie wykonac przelew!" +
+            $"Kwota {Utility.FormatujKwote(przelewMiedzyKontami.TransferAmount)} " +
+            $"zostala wyslana do" +
+            $"{przelewMiedzyKontami.RecipeintBankAccountName}", true);
+
+    }
 }

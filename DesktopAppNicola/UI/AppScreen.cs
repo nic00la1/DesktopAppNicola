@@ -101,7 +101,6 @@ namespace DesktopAppNicola.UI
                     break;
                 default:
                     Utility.WyswietlWiadomosc("Nieprawidlowa kwota. Sprobuj ponownie", false);
-                    WybierzKwote();
                     return -1;
                     break;
             }

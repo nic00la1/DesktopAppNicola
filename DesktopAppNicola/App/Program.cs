@@ -1,4 +1,5 @@
-﻿using DesktopAppNicola.Enums;
+﻿using ConsoleTables;
+using DesktopAppNicola.Enums;
 using DesktopAppNicola.Interfejsy;
 using DesktopAppNicola.Klasy;
 using DesktopAppNicola.UI;
@@ -18,8 +19,11 @@ public class Program : IUserLogin, IUserAccountActions, ITransaction
         // Tworzy nowy obiekt Menu i przekazuje do niego obecny obiekt Program
         // jako argument konstruktora, poniewaz Menu potrzebuje dostepu do metod
         // w obiekcie Program
-        Menu menu = new Menu(this);
-        menu.StartMenu();
+        while (true) // dopoki user sie nie wyloguje
+        {
+            Menu menu = new Menu(this);
+            menu.StartMenu();
+        }
     }
 
     public void InicjalizujDane()
@@ -192,7 +196,10 @@ public class Program : IUserLogin, IUserAccountActions, ITransaction
         // Jesli uzytkownik wybierze
         // nieprawidlowa kwote, wybierz kwote od nowa
         if (wybrana_kwota == -1)
-            wybrana_kwota = AppScreen.WybierzKwote();
+        {
+            Wyplac_Pieniadze();
+            return;
+        }
         else if (wybrana_kwota != 0) // Jesli prawidlowa kwota, przypisz ja do kwota_transakcji
             kwota_transakcji = wybrana_kwota;
         else
@@ -317,7 +324,41 @@ public class Program : IUserLogin, IUserAccountActions, ITransaction
 
     public void Zobacz_Transakcje()
     {
-        throw new NotImplementedException();
+        // sortuje transakcje po Id uzytkownika
+        var posortowaneTransakcje = listaTransakcji.Where(
+                t => t.UserBankAccountId == wybranyUzytkownik.Id).ToList();
+
+        // Sprawdz czy sa jakies transakcje
+        if (posortowaneTransakcje.Count <= 0) // Jesli nie ma transakcji
+        {
+            Utility.WyswietlWiadomosc("Nie masz jeszcze zadnych transakcji.", true);
+            return;
+        }
+        else // Jesli sa transakcje
+        {
+            // Uzywam paczke z NugetPackage - ,,ConsoleTables"
+            var table = new ConsoleTable("Id", "Data transakcji",
+                "Opisy", "Typ", "Kwota " + AppScreen.waluta);
+
+            // Dla kazdej transakcji w posortowanych transakcjach
+            // dodaj wiersz do tabeli
+            foreach (var transakcja in posortowaneTransakcje)
+            {
+                table.AddRow(transakcja.TransactionId,
+                             transakcja.TransactionDate,
+                             transakcja.Description,
+                             transakcja.TransactionType,
+                             transakcja.TransactionAmount);
+            }
+
+            table.Options.EnableCount = false; // Wylacza numerowanie wierszy
+            table.Write(); // Wyswietla tabele
+
+            if (posortowaneTransakcje.Count >= 5)
+                Utility.WyswietlWiadomosc($"Wykonales {posortowaneTransakcje.Count} transakcji", true);
+            else
+                Utility.WyswietlWiadomosc($"Wykonales {posortowaneTransakcje.Count} transakcje", true);
+        }
     }
 
     public void Process_Przelewu_Miedzy_Kontami(
@@ -329,17 +370,17 @@ public class Program : IUserLogin, IUserAccountActions, ITransaction
                                "Sprobuj ponownie", false);
             return;
         }
-        // Sprawdz saldo uzytkownika
+        // Sprawdz saldo uzytkownika (nadawcy)
         if (przelewMiedzyKontami.TransferAmount
             > wybranyUzytkownik.AccountBalance)
         {
-            Utility.WyswietlWiadomosc("Nie masz wystarczajaco srodkow na koncie!" +
+            Utility.WyswietlWiadomosc("Nie masz wystarczajaco srodkow na koncie aby wykonac przelew!" +
                 $"Twoje saldo wynosi {Utility.FormatujKwote(wybranyUzytkownik.AccountBalance)}", false);
             return;
         }
         // Sprawdz czy minimalna kwota na koncie
         // zostanie zachowana po przelewie
-        if ((wybranyUzytkownik.AccountBalance - minimalna_kwota_na_koncie)
+        if ((wybranyUzytkownik.AccountBalance - przelewMiedzyKontami.TransferAmount)
             < minimalna_kwota_na_koncie)
         {
             Utility.WyswietlWiadomosc
@@ -382,7 +423,7 @@ public class Program : IUserLogin, IUserAccountActions, ITransaction
             -przelewMiedzyKontami.TransferAmount, // Ujemna kwota oznacza pieniadze przekazane
                                                   // na konto odbiorcy
             $"Przelew na konto: {wybrane_Konto_Odbiorcy.AccountNumber}" +
-            $"({wybrane_Konto_Odbiorcy.FullName})" // opis transakcji
+            $" ({wybrane_Konto_Odbiorcy.FullName})" // opis transakcji
             );
 
         // Aktualizuj saldo uzytkownika, wysylajacego przelew (nadawcy)
@@ -402,10 +443,10 @@ public class Program : IUserLogin, IUserAccountActions, ITransaction
         wybrane_Konto_Odbiorcy.AccountBalance += przelewMiedzyKontami.TransferAmount;
 
         // Wyswietl komunikat o sukcesie
-        Utility.WyswietlWiadomosc("Udalo sie wykonac przelew!" +
+        Utility.WyswietlWiadomosc("Udalo sie wykonac przelew! " +
             $"Kwota {Utility.FormatujKwote(przelewMiedzyKontami.TransferAmount)} " +
-            $"zostala wyslana do" +
-            $"{przelewMiedzyKontami.RecipeintBankAccountName}", true);
+            $"zostala przelana do" +
+            $" {przelewMiedzyKontami.RecipeintBankAccountName}", true);
 
     }
 }

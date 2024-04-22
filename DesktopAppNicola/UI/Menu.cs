@@ -3,7 +3,8 @@
     public class Menu
     {
         static string[] pozycjeMenu = { "Sprawdz saldo konta", "Wplac pieniadze na konto" ,
-                                        "Wyplac pieniadze z konta", "Wykonaj przelew" ,"Wyloguj" };
+                                        "Wyplac pieniadze z konta", "Wykonaj przelew",
+                                        "Zobacz wszystkie transakcje", "Wyloguj" };
         static int aktywnaPozycjaMenu = 0; // Zacznij od pierwszej pozycji
         private Program program;
         private readonly AppScreen screen;
@@ -105,6 +106,9 @@
                     program.Process_Przelewu_Miedzy_Kontami(przelewMiedzyKontami); // Przekazanie obiektu przelewMiedzyKontami do metody Process_Przelewu_Miedzy_Kontami
                     break;
                 case 4:
+                    program.Zobacz_Transakcje();
+                    break;
+                case 5:
                     AppScreen.WylogujProgress();
                     Utility.WyswietlWiadomosc("Udane wylogowanie. Prosze wyjac karte z bankomatu");
                     program.Run();

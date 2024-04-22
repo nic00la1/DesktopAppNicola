@@ -2,7 +2,8 @@
 {
     public class Menu
     {
-        static string[] pozycjeMenu = { "Sprawdz saldo konta", "Wyloguj" };
+        static string[] pozycjeMenu = { "Sprawdz saldo konta", "Wplac pieniadze na konto" ,
+            "Wyloguj" };
         static int aktywnaPozycjaMenu = 0; // Zacznij od pierwszej pozycji
         private Program program;
 
@@ -91,6 +92,9 @@
                     program.Sprawdz_Swoje_Saldo();
                     break;
                 case 1:
+                    program.Wplac_Pieniadze();
+                    break;
+                case 2:
                     AppScreen.WylogujProgress();
                     Utility.WyswietlWiadomosc("Udane wylogowanie. Prosze wyjac karte z bankomatu");
                     program.Run();

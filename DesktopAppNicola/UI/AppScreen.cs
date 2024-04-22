@@ -4,6 +4,7 @@ namespace DesktopAppNicola.UI
 {
     public static class AppScreen
     {
+        internal const string waluta = "PLN";
         internal static void Powitanie()
         {
             Console.Clear();

@@ -1,11 +1,13 @@
-﻿using DesktopAppNicola.Interfejsy;
+﻿using DesktopAppNicola.Enums;
+using DesktopAppNicola.Interfejsy;
 using DesktopAppNicola.Klasy;
 using DesktopAppNicola.UI;
 
-public class Program : IUserLogin, IUserAccountActions
+public class Program : IUserLogin, IUserAccountActions, ITransaction
 {
     private List<UserAccount> listaUzytkownikow;
     private UserAccount wybranyUzytkownik;
+    private List<Transaction> listaTransakcji;
 
     public void Run()
     {
@@ -54,6 +56,8 @@ public class Program : IUserLogin, IUserAccountActions
                 IsLocked = true,
             }
         };
+        // Inicjalizuje liste transakcji jako nowa pusta liste
+        listaTransakcji = new List<Transaction>();
     }
 
     public void Sprawdz_Num_Karty_Klienta_I_Haslo()
@@ -128,10 +132,119 @@ public class Program : IUserLogin, IUserAccountActions
 
     public void Wplac_Pieniadze()
     {
-        throw new NotImplementedException();
+        Console.WriteLine("\nWplac pieniadze na konto\n");
+        var kwota_transakcji = Walidacja.Convert<int>($"kwote {AppScreen.waluta}");
+
+        // Symulacja liczenia
+        Console.WriteLine("Sprawdzanie i liczenie pieniedzy...");
+        Utility.WyswietlAnimacjeKropek();
+        Console.WriteLine($"");
+
+        // Obsluga bledow
+        if (kwota_transakcji <= 0)
+        {
+            Utility.WyswietlWiadomosc("Kwota musi byc wieksza niz 0." +
+                "Sprobuj ponownie", false);
+            return;
+        }
+        // Jesli kwota transakcji
+        // Nie jest wielokrotnoscia 20, 50, 100, 200, 500
+        if (kwota_transakcji % 20 != 0
+            && kwota_transakcji % 50 != 0
+            && kwota_transakcji % 100 != 0
+            && kwota_transakcji % 200 != 0
+            && kwota_transakcji % 500 != 0)
+        {
+            Utility.WyswietlWiadomosc("Kwota musi byc zgodna z banknotami!");
+            return;
+        }
+        // Jesli uzytkownik przerwie transakcje
+        if (Podglad_Ilosci_Banknotow(kwota_transakcji) == false)
+        {
+            Utility.WyswietlWiadomosc("Anulowales transakcje.", false);
+            return;
+        }
+
+        // Binduje detale transakcji z obiektem transakcji
+        // (Przekazuje dane)
+        Wprowadz_Transakcje(
+            wybranyUzytkownik.Id,
+            TransactionType.Wplata,
+            kwota_transakcji,
+            "" // opis transakcji
+            );
+
+        // Aktualizuje saldo uzytkownika
+        wybranyUzytkownik.AccountBalance += kwota_transakcji;
+
+        // Wyswietla komunikat o sukcesie
+        Utility.WyswietlWiadomosc($"Twoja wplata " +
+            $"{Utility.FormatujKwote(kwota_transakcji)} " +
+            $"zostala wplacona na konto", true);
     }
 
     public void Wyplac_Pieniadze()
+    {
+        throw new NotImplementedException();
+    }
+
+    private bool Podglad_Ilosci_Banknotow(int amount)
+    {
+        int originalAmount = amount; // Zapamiętaj początkową kwotę
+
+        int banknot_500 = amount / 500;
+        amount %= 500;
+        int banknot_200 = amount / 200;
+        amount %= 200;
+        int banknot_100 = amount / 100;
+        amount %= 100;
+        int banknot_50 = amount / 50;
+        amount %= 50;
+        int banknot_20 = amount / 20;
+        amount %= 20;
+
+        Console.WriteLine($"Podsumowanie");
+        Console.WriteLine("-----------------");
+
+        // Wyswietla banknoty ktore zostana wydane
+        // Przy tej konkretnej kwocie ktora
+        // uzytkownik chce wplacic
+        if (banknot_500 > 0)
+            Console.WriteLine($"500{AppScreen.waluta} X {banknot_500}");
+        if (banknot_200 > 0)
+            Console.WriteLine($"200{AppScreen.waluta} X {banknot_200}");
+        if (banknot_100 > 0)
+            Console.WriteLine($"100{AppScreen.waluta} X {banknot_100}");
+        if (banknot_50 > 0)
+            Console.WriteLine($"50{AppScreen.waluta} X {banknot_50}");
+        if (banknot_20 > 0)
+            Console.WriteLine($"20{AppScreen.waluta} X {banknot_20}");
+
+        Console.WriteLine($"Kwota calkowita: " +
+            $"{Utility.FormatujKwote(originalAmount)}\n\n");
+
+        int wybor = Walidacja.Convert<int>("1. Potwierdz\n");
+        return wybor.Equals(1);
+    }
+
+    public void Wprowadz_Transakcje(long _UserBankAccountId, TransactionType _tranType, decimal _tranAmount, string _description)
+    {
+        // Tworzy nowy obiekt transakcji
+        var transakcja = new Transaction()
+        {
+            TransactionId = Utility.DostanIdTransakcji(), // Pobiera unikalne id transakcji
+            UserBankAccountId = _UserBankAccountId,
+            TransactionDate = DateTime.Now, // Pobiera obecna date
+            TransactionType = _tranType, // Typ transakcji
+            TransactionAmount = _tranAmount, // Kwota transakcji
+            Description = _description // Opis 
+        };
+
+        // Dodaje transakcje do listy transakcji
+        listaTransakcji.Add(transakcja);
+    }
+
+    public void Zobacz_Transakcje()
     {
         throw new NotImplementedException();
     }

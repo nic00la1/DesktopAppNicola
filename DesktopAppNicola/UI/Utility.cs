@@ -5,7 +5,15 @@ namespace DesktopAppNicola.UI
 {
     public static class Utility
     {
+        private static long tranId; // Identyfikator transakcji
         private static CultureInfo culture = new CultureInfo("pl-PL"); // Ustawienie kultury na PL (Waluta)
+
+        public static long DostanIdTransakcji()
+        {
+            // ++ przed zmienna zwieksza ja o 1 przed zwroceniem
+            return ++tranId; // Zwieksz identyfikator transakcji o 1 i zwroc go
+        }
+
         public static string SzyfrujZnaki(string prompt)
         {
             bool jestWpisany = true;

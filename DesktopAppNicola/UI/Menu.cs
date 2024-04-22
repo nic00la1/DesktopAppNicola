@@ -3,7 +3,7 @@
     public class Menu
     {
         static string[] pozycjeMenu = { "Sprawdz saldo konta", "Wplac pieniadze na konto" ,
-            "Wyloguj" };
+                                        "Wyplac pieniadze z konta", "Wyloguj" };
         static int aktywnaPozycjaMenu = 0; // Zacznij od pierwszej pozycji
         private Program program;
 
@@ -95,19 +95,14 @@
                     program.Wplac_Pieniadze();
                     break;
                 case 2:
+                    program.Wyplac_Pieniadze();
+                    break;
+                case 3:
                     AppScreen.WylogujProgress();
                     Utility.WyswietlWiadomosc("Udane wylogowanie. Prosze wyjac karte z bankomatu");
                     program.Run();
                     break;
             }
-        }
-
-        private void opcjaWBudowie()
-        {
-            // Kursor 12 kolumna, 4 wiersz
-            Console.SetCursorPosition(12, 4);
-            Console.WriteLine("Opcja w budowie");
-            Console.ReadKey();
         }
     }
 }

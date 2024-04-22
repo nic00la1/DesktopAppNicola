@@ -59,5 +59,52 @@ namespace DesktopAppNicola.UI
             Utility.WyswietlAnimacjeKropek();
             Console.Clear();
         }
+
+        internal static int WybierzKwote()
+        {
+            Console.WriteLine("");
+            Console.WriteLine(":1. 20{0}        5. 500{0}", waluta);
+            Console.WriteLine(":2. 50{0}        6. 800{0}", waluta);
+            Console.WriteLine(":3. 100{0}       7. 1000{0}", waluta);
+            Console.WriteLine(":4. 200{0}       8. 2000{0}", waluta);
+            Console.WriteLine(":0. Inna\n");
+
+            int wybranaKwota = Walidacja.Convert<int>("opcje:");
+            switch (wybranaKwota)
+            {
+                case 1:
+                    return 20;
+                    break;
+                case 2:
+                    return 50;
+                    break;
+                case 3:
+                    return 100;
+                    break;
+                case 4:
+                    return 200;
+                    break;
+                case 5:
+                    return 500;
+                    break;
+                case 6:
+                    return 800;
+                    break;
+                case 7:
+                    return 1000;
+                    break;
+                case 8:
+                    return 2000;
+                    break;
+                case 0:
+                    return 0;
+                    break;
+                default:
+                    Utility.WyswietlWiadomosc("Nieprawidlowa kwota. Sprobuj ponownie", false);
+                    WybierzKwote();
+                    return -1;
+                    break;
+            }
+        }
     }
 }

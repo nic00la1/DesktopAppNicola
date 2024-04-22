@@ -13,11 +13,15 @@ namespace DesktopAppNicola.UI
         private readonly TransactionService transactionService;
 
 
+
         public Menu(Program program)
         {
             this.program = program;
             screen = new AppScreen(); // Tworzy nowy obiekt AppScreen w celu dostepu do metod w klasie AppScreen
-            transactionService = new TransactionService(program.wybranyUzytkownik, program.listaTransakcji);
+            transactionService = new TransactionService(
+                program.wybranyUzytkownik,
+                program.listaUzytkownikow,
+                program.listaTransakcji);
         }
 
         public void StartMenu()
@@ -97,20 +101,20 @@ namespace DesktopAppNicola.UI
             switch (aktywnaPozycjaMenu)
             {
                 case 0:
-                    program.Sprawdz_Swoje_Saldo();
+                    transactionService.Sprawdz_Swoje_Saldo();
                     break;
                 case 1:
-                    program.Wplac_Pieniadze();
+                    transactionService.Wplac_Pieniadze();
                     break;
                 case 2:
                     transactionService.Wyplac_Pieniadze();
                     break;
                 case 3:
                     var przelewMiedzyKontami = screen.Formularz_Do_Przelewu(); // Przypisanie obiektu przelewMiedzyKontami do metody Formularz_Do_Przelewu
-                    program.Process_Przelewu_Miedzy_Kontami(przelewMiedzyKontami); // Przekazanie obiektu przelewMiedzyKontami do metody Process_Przelewu_Miedzy_Kontami
+                    transactionService.Process_Przelewu_Miedzy_Kontami(przelewMiedzyKontami);
                     break;
                 case 4:
-                    program.Zobacz_Transakcje();
+                    transactionService.Zobacz_Transakcje();
                     break;
                 case 5:
                     AppScreen.WylogujProgress();

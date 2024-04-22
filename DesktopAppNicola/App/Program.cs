@@ -2,20 +2,31 @@
 using DesktopAppNicola.Enums;
 using DesktopAppNicola.Interfejsy;
 using DesktopAppNicola.Klasy;
+using DesktopAppNicola.Services;
 using DesktopAppNicola.UI;
 
-public class Program : IUserLogin, IUserAccountActions, ITransaction
+public class Program : ITransaction
 {
     private List<UserAccount> listaUzytkownikow;
-    private UserAccount wybranyUzytkownik;
-    private List<Transaction> listaTransakcji;
+    public UserAccount wybranyUzytkownik;
+    public List<Transaction> listaTransakcji;
     private const decimal minimalna_kwota_na_koncie = 100.00m;
+
+    private readonly UserAuthenticationService _autoryzujService;
+
+    public Program()
+    {
+        InicjalizujDane();
+        _autoryzujService = new UserAuthenticationService(listaUzytkownikow);
+    }
 
     public void Run()
     {
         AppScreen.Powitanie();
-        Sprawdz_Num_Karty_Klienta_I_Haslo();
+        // Uzycie serwisu autoryzacji uzytkownika
+        wybranyUzytkownik = _autoryzujService.Sprawdz_Num_Karty_Klienta_I_Haslo();
         AppScreen.Powitaj_Zalogowanego_Uzytkownika(wybranyUzytkownik.FullName);
+
         // Tworzy nowy obiekt Menu i przekazuje do niego obecny obiekt Program
         // jako argument konstruktora, poniewaz Menu potrzebuje dostepu do metod
         // w obiekcie Program
@@ -65,61 +76,7 @@ public class Program : IUserLogin, IUserAccountActions, ITransaction
         listaTransakcji = new List<Transaction>();
     }
 
-    public void Sprawdz_Num_Karty_Klienta_I_Haslo()
-    {
-        bool czyPoprawnyLogin = false;
 
-        while (czyPoprawnyLogin == false)
-        {
-            UserAccount inputAccount = AppScreen.UserLoginForm(); // Pobiera dane z formularza logowania
-            AppScreen.LoginProgress(); // Wyświetla animacje kropek (symulacja logowania)
-
-            // Dla kazdego usera w liscie uzytkownikow, sprawdz czy numer karty i pin sa poprawne
-            foreach (UserAccount uzytkownik in listaUzytkownikow)
-            {
-                wybranyUzytkownik = uzytkownik;
-                // Sprawdza czy numer karty i pin sa poprawne
-                if (inputAccount.CardNumber.Equals(wybranyUzytkownik.CardNumber))
-                {
-                    wybranyUzytkownik.TotalLogin++; // Zwieksza liczbe prob logowania
-
-                    // Jesli pin jest poprawny
-                    if (inputAccount.CardPin.Equals(wybranyUzytkownik.CardPin))
-                    {
-                        wybranyUzytkownik = uzytkownik;
-
-                        // Jesli konto jest zablokowane lub liczba prob logowania jest wieksza niz 3
-                        if (wybranyUzytkownik.IsLocked || wybranyUzytkownik.TotalLogin > 3)
-                        {
-                            // Wyswietl komunikat o zablokowanym koncie
-                            AppScreen.Wyswietl_Komunikat_O_Zablokowanym_Koncie();
-                        }
-                        else
-                        {
-                            /* Jesli konto nie jest zablokowane,
-                             resetuj liczbe prob logowania */
-                            wybranyUzytkownik.TotalLogin = 0;
-                            czyPoprawnyLogin = true;
-                            break;
-                        }
-                    }
-                }
-                // Jesli numer karty i pin sa niepoprawne
-                if (czyPoprawnyLogin == false)
-                {
-                    Utility.WyswietlWiadomosc("\n Numer karty lub PIN jest niepoprawny. ", false);
-                    // Jesli liczba prob logowania jest wieksza niz 3, zablokuj konto
-                    wybranyUzytkownik.IsLocked = wybranyUzytkownik.TotalLogin == 3;
-
-                    if (wybranyUzytkownik.IsLocked)
-                    {
-                        AppScreen.Wyswietl_Komunikat_O_Zablokowanym_Koncie();
-                    }
-                }
-                Console.Clear();
-            }
-        }
-    }
 
     public void Sprawdz_Swoje_Saldo()
     {
@@ -186,84 +143,6 @@ public class Program : IUserLogin, IUserAccountActions, ITransaction
         Utility.WyswietlWiadomosc($"Twoja wplata " +
             $"{Utility.FormatujKwote(kwota_transakcji)} " +
             $"zostala wplacona na konto", true);
-    }
-
-    public void Wyplac_Pieniadze()
-    {
-        var kwota_transakcji = 0;
-        int wybrana_kwota = AppScreen.WybierzKwote();
-
-        // Jesli uzytkownik wybierze
-        // nieprawidlowa kwote, wybierz kwote od nowa
-        if (wybrana_kwota == -1)
-        {
-            Wyplac_Pieniadze();
-            return;
-        }
-        else if (wybrana_kwota != 0) // Jesli prawidlowa kwota, przypisz ja do kwota_transakcji
-            kwota_transakcji = wybrana_kwota;
-        else
-        {
-            kwota_transakcji = Walidacja.Convert<int>($"kwote {AppScreen.waluta}");
-        }
-
-        // Walidacja wpisanej kwoty
-        if (kwota_transakcji <= 0)
-        {
-            Utility.WyswietlWiadomosc("Kwota musi byc wieksza niz 0." +
-                               "Sprobuj ponownie", false);
-            return;
-        }
-        // Jesli kwota transakcji nie jest
-        // wielokrotnoscia 20, 50, 100, 200, 500
-        if (kwota_transakcji % 20 != 0
-            && kwota_transakcji % 50 != 0
-            && kwota_transakcji % 100 != 0
-            && kwota_transakcji % 200 != 0
-            && kwota_transakcji % 500 != 0)
-        {
-            Utility.WyswietlWiadomosc("Kwota musi byc zgodna z banknotami!");
-            return;
-        }
-        // Logika biznesowa (symulacja) - sprawdza czy
-        // uzytkownik ma wystarczajaco srodkow na koncie
-
-        if (kwota_transakcji > wybranyUzytkownik.AccountBalance)
-        {
-            Utility.WyswietlWiadomosc("Nie masz wystarczajaco srodkow na koncie!" +
-                $"Twoje saldo wynosi {Utility.FormatujKwote(wybranyUzytkownik.AccountBalance)}", false);
-            return;
-        }
-
-        // Jesli uzytkownik chce wyplacic kwote
-        // przewyzszajaca minimalna kwote
-        // ktora musi pozostac na koncie
-        if ((wybranyUzytkownik.AccountBalance - kwota_transakcji)
-            < minimalna_kwota_na_koncie)
-        {
-            Utility.WyswietlWiadomosc("Nie mozesz wyplacic tej kwoty. " +
-                               "Twoje saldo musi miec zachowane " +
-                               $"minimum {Utility.FormatujKwote(minimalna_kwota_na_koncie)}", false);
-            return;
-        }
-
-        // Binduje detale transakcji do obiektu transakcji
-        // (Przekazuje dane)
-        Wprowadz_Transakcje
-            (
-            wybranyUzytkownik.Id,
-            TransactionType.Wyplata,
-            -kwota_transakcji, // Ujemna kwota oznacza wyplate
-            "" // Opis transakcji
-            );
-
-        // Aktualizuje saldo uzytkownika
-        wybranyUzytkownik.AccountBalance -= kwota_transakcji;
-
-        // Wyswietla komunikat o sukcesie
-        Utility.WyswietlWiadomosc($"Twoja wyplata " +
-                       $"{Utility.FormatujKwote(kwota_transakcji)} " +
-                                  $"zostala wyplacona z konta", true);
     }
 
     private bool Podglad_Ilosci_Banknotow(int amount)

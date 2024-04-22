@@ -4,7 +4,7 @@
     {
         static void Main(string[] args)
         {
-            Program program = new Program(); // Program to klasa z pliku Program.cs
+            Program program = new Program();
             program.InicjalizujDane();
             program.Run(); // Uruchamia program rozpoczynajac od ekranu powitalnego i logowania
         }

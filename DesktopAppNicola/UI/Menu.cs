@@ -1,4 +1,6 @@
-﻿namespace DesktopAppNicola.UI
+﻿using DesktopAppNicola.Services;
+
+namespace DesktopAppNicola.UI
 {
     public class Menu
     {
@@ -8,12 +10,14 @@
         static int aktywnaPozycjaMenu = 0; // Zacznij od pierwszej pozycji
         private Program program;
         private readonly AppScreen screen;
+        private readonly TransactionService transactionService;
 
 
         public Menu(Program program)
         {
             this.program = program;
             screen = new AppScreen(); // Tworzy nowy obiekt AppScreen w celu dostepu do metod w klasie AppScreen
+            transactionService = new TransactionService(program.wybranyUzytkownik, program.listaTransakcji);
         }
 
         public void StartMenu()
@@ -99,7 +103,7 @@
                     program.Wplac_Pieniadze();
                     break;
                 case 2:
-                    program.Wyplac_Pieniadze();
+                    transactionService.Wyplac_Pieniadze();
                     break;
                 case 3:
                     var przelewMiedzyKontami = screen.Formularz_Do_Przelewu(); // Przypisanie obiektu przelewMiedzyKontami do metody Formularz_Do_Przelewu

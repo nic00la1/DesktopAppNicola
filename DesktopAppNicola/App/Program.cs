@@ -25,15 +25,17 @@ public class Program
     {
         // Uzywam paczke z NugetPackage
         // Newtonsoft.Json do deserializacji danych z pliku JSON
-        var fileName = @"C:\Users\Admin\source\repos\DesktopAppNicola\DesktopAppNicola\DummyData\users.json";
+        var fileNameUsers = @"C:\Users\Admin\source\repos\DesktopAppNicola\DesktopAppNicola\DummyData\users.json";
+        var fileNameTransactions = @"C:\Users\Admin\source\repos\DesktopAppNicola\DesktopAppNicola\DummyData\transactions.json";
 
-        string jsonText = File.ReadAllText(fileName);
+        string jsonUsers = File.ReadAllText(fileNameUsers);
+        string jsonTransactions = File.ReadAllText(fileNameTransactions);
 
         listaUzytkownikow = Newtonsoft.Json
-            .JsonConvert.DeserializeObject<List<UserAccount>>(jsonText);
+            .JsonConvert.DeserializeObject<List<UserAccount>>(jsonUsers);
 
-        // Inicjalizuje liste transakcji
-        listaTransakcji = new List<Transaction>();
+        listaTransakcji = Newtonsoft.Json
+            .JsonConvert.DeserializeObject<List<Transaction>>(jsonTransactions);
     }
 }
 

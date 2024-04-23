@@ -96,6 +96,7 @@ namespace DesktopAppNicola.Services
 
             // Aktualizuje saldo uzytkownika
             wybranyUzytkownik.AccountBalance -= kwota_transakcji;
+            Zapisz_Zmiany_Usera_Do_Bazy(); // Zapisuje zmiany do bazy
 
             // Wyswietla komunikat o sukcesie
             Utility.WyswietlWiadomosc($"Twoja wyplata " +
@@ -163,11 +164,14 @@ namespace DesktopAppNicola.Services
 
             // Aktualizuje saldo uzytkownika
             wybranyUzytkownik.AccountBalance += kwota_transakcji;
+            Zapisz_Zmiany_Usera_Do_Bazy(); // Zapisuje zmiany do bazy
 
             // Wyswietla komunikat o sukcesie
             Utility.WyswietlWiadomosc($"Twoja wplata " +
                 $"{Utility.FormatujKwote(kwota_transakcji)} " +
                 $"zostala wplacona na konto", true);
+
+
         }
 
         private bool Podglad_Ilosci_Banknotow(int amount)
@@ -254,7 +258,7 @@ namespace DesktopAppNicola.Services
             if (przelewMiedzyKontami.TransferAmount <= 0)
             {
                 Utility.WyswietlWiadomosc("Kwota musi byc wieksza niz 0." +
-                                   "Sprobuj ponownie", false);
+                    "Sprobuj ponownie", false);
                 return;
             }
             // Sprawdz saldo uzytkownika (nadawcy)
@@ -301,6 +305,13 @@ namespace DesktopAppNicola.Services
                 return;
             }
 
+            // Sprawdz czy nadawca i odbiorca to ten sam uzytkownik
+            if (wybranyUzytkownik.Id == wybrane_Konto_Odbiorcy.Id)
+            {
+                Utility.WyswietlWiadomosc("Nie mozesz wykonac przelewu do swojego konta.", false);
+                return;
+            }
+
             // Dodaj transakcje do listy transakcji
             // (wysylanie rekordu przelewu) (nadawca)
             Wprowadz_Transakcje
@@ -315,6 +326,7 @@ namespace DesktopAppNicola.Services
 
             // Aktualizuj saldo uzytkownika, wysylajacego przelew (nadawcy)
             wybranyUzytkownik.AccountBalance -= przelewMiedzyKontami.TransferAmount;
+            Zapisz_Zmiany_Usera_Do_Bazy(); // Zapisuje zmiany do bazy
 
             // Dodaj transakcje do listy transakcji
             // (otrzymywanie rekordu przelewu) (odbiorca)
@@ -328,6 +340,7 @@ namespace DesktopAppNicola.Services
 
             // Aktualizuj saldo uzytkownika, (odbiorcy przelewu)
             wybrane_Konto_Odbiorcy.AccountBalance += przelewMiedzyKontami.TransferAmount;
+            Zapisz_Zmiany_Usera_Do_Bazy(); // Zapisuje zmiany do bazy
 
             // Wyswietl komunikat o sukcesie
             Utility.WyswietlWiadomosc("Udalo sie wykonac przelew! " +
@@ -352,6 +365,22 @@ namespace DesktopAppNicola.Services
 
             // Dodaje transakcje do listy transakcji
             listaTransakcji.Add(transakcja);
+
+            Zapisz_Zmiany_Transakcji_Do_Bazy();
+        }
+
+        public void Zapisz_Zmiany_Usera_Do_Bazy()
+        {
+            var fileName = @"C:\Users\Admin\source\repos\DesktopAppNicola\DesktopAppNicola\DummyData\users.json";
+            var jsonText = Newtonsoft.Json.JsonConvert.SerializeObject(listaUzytkownikow);
+            File.WriteAllText(fileName, jsonText);
+        }
+
+        public void Zapisz_Zmiany_Transakcji_Do_Bazy()
+        {
+            var fileName = @"C:\Users\Admin\source\repos\DesktopAppNicola\DesktopAppNicola\DummyData\transactions.json";
+            var jsonText = Newtonsoft.Json.JsonConvert.SerializeObject(listaTransakcji);
+            File.WriteAllText(fileName, jsonText);
         }
     }
 }

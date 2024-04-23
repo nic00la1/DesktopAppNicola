@@ -127,6 +127,11 @@ namespace DesktopAppNicola.Services
                 AccountBalance = initialBalance,
                 IsLocked = false, // Nowe konto jest domyslnie odblokowane
             });
+
+            // Zapisuje dane do pliku JSON
+            var fileName = @"C:\Users\Admin\source\repos\DesktopAppNicola\DesktopAppNicola\DummyData\users.json";
+            var jsonData = Newtonsoft.Json.JsonConvert.SerializeObject(listaUzytkownikow);
+            File.WriteAllText(fileName, jsonData);
         }
     }
 }

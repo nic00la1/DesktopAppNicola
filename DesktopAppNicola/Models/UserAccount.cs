@@ -10,5 +10,6 @@
         public decimal AccountBalance { get; set; }
         public int TotalLogin { get; set; } // ilosc prob logowania
         public bool IsLocked { get; set; }
+        public List<Transaction> Transactions { get; set; }
     }
 }

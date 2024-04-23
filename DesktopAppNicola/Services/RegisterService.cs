@@ -59,6 +59,9 @@ namespace DesktopAppNicola.Services
 
             Dodaj_Nowego_Uzytkownika(fullName, accountNumber, cardNumber, cardPin, initialBalance);
 
+            RegisterProgress();
+            Powitaj_Zarejestrowanego_Uzytkownika(fullName);
+
             Utility.WyswietlWiadomosc("Konto zostalo utworzone pomyslnie. " +
                                "Wcisnij Enter aby kontynuowac", true);
 
@@ -120,5 +123,20 @@ namespace DesktopAppNicola.Services
             var jsonData = Newtonsoft.Json.JsonConvert.SerializeObject(listaUzytkownikow);
             File.WriteAllText(fileName, jsonData);
         }
+
+        internal static void RegisterProgress()
+        {
+            Console.WriteLine("\nSprawdzanie poprawnosc danych");
+            Utility.WyswietlAnimacjeKropek();
+        }
+
+        internal static void Powitaj_Zarejestrowanego_Uzytkownika(string fullname)
+        {
+            Console.WriteLine($"\nWitaj, {fullname}! Zaloguj sie, aby sprawdzic" +
+                $" czy to napewno Ty.");
+            Utility.WcisnijEnterByKontynuowac();
+        }
+
+
     }
 }

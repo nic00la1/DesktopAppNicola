@@ -17,88 +17,43 @@ namespace DesktopAppNicola.Services
             Console.Clear();
 
             Console.WriteLine("\n\n-------Rejestracja nowego konta-------");
-            Console.WriteLine("Wprowadz swoje dane");
-            Console.WriteLine("Imie i nazwisko: ");
-            string fullName = Console.ReadLine();
+            Console.WriteLine("\nWprowadz swoje dane");
 
-            if (string.IsNullOrEmpty(fullName))
-            {
-                Utility.WyswietlWiadomosc("Imie i nazwisko nie moze byc puste. Sprobuj ponownie.", false);
+            string fullName = WalidujImieINazwisko();
+            if (fullName == null) // Jesli uzytkownik wcisnal Enter 
                 return;
-            }
+            int accountNumber = WalidujNumer("Numer konta: ",
+                x => x != 0 // Numer konta nie moze byc pusty
+                && x.ToString().Length == 6 // Numer konta musi miec 6 cyfr
+                && !listaUzytkownikow.Exists(u => u.AccountNumber == x));
+            // Numer konta nie moze sie powtarzac
 
-            Console.WriteLine("Numer konta: ");
-            int accountNumber = Convert.ToInt32(Console.ReadLine());
 
-            if (accountNumber == 0)
-            {
-                Utility.WyswietlWiadomosc("Numer konta nie moze byc zerem. Sprobuj ponownie.", false);
+            if (accountNumber == 0) // Jesli uzytkownik wcisnal Enter
                 return;
-            }
-            // Jesli to nie numer
-            if (!int.TryParse(accountNumber.ToString(), out int czyNumer))
-            {
-                Utility.WyswietlWiadomosc("Numer konta musi byc liczba. Sprobuj ponownie.", false);
-                return;
-            }
-            else if (accountNumber.ToString().Length != 6)
-            {
-                Utility.WyswietlWiadomosc("Numer konta musi miec 6 cyfr. Sprobuj ponownie.", false);
-                return;
-            }
-            else if (listaUzytkownikow.Exists(x => x.AccountNumber == accountNumber))
-            {
-                Utility.WyswietlWiadomosc("Konto o podanym numerze juz istnieje. Sprobuj ponownie.", false);
-                return;
-            }
 
-            Console.WriteLine("Numer karty: ");
-            int cardNumber = Convert.ToInt32(Console.ReadLine());
-
+            int cardNumber = WalidujNumer("Numer karty: ",
+                x => x != 0
+                && x.ToString().Length == 6
+                && !listaUzytkownikow.Exists(u => u.CardNumber == x));
             if (cardNumber == 0)
-            {
-                Utility.WyswietlWiadomosc("Numer karty nie moze byc zerem. Sprobuj ponownie.", false);
                 return;
-            }
 
-            else if (cardNumber.ToString().Length != 6)
-            {
-                Utility.WyswietlWiadomosc("Numer karty musi miec 6 cyfr. Sprobuj ponownie.", false);
-                return;
-            }
-            else if (listaUzytkownikow.Exists(x => x.CardNumber == cardNumber))
-            {
-                Utility.WyswietlWiadomosc("Karta o podanym numerze juz istnieje. Sprobuj ponownie.", false);
-                return;
-            }
-
-            Console.WriteLine("Numer PIN: ");
-            int cardPin = Convert.ToInt32(Console.ReadLine());
-
-            // jesli PIN to nie numer
-            if (!int.TryParse(cardPin.ToString(), out int result))
-            {
-                Utility.WyswietlWiadomosc("PIN musi byc liczba. Sprobuj ponownie.", false);
-                return;
-            }
+            int cardPin = Convert.ToInt32(Utility.SzyfrujZnaki("PIN: "));
             if (cardPin == 0)
-            {
-                Utility.WyswietlWiadomosc("PIN nie moze byc zerem. Sprobuj ponownie.", false);
-            }
-            else if (cardPin.ToString().Length != 6)
-            {
-                Utility.WyswietlWiadomosc("PIN musi miec 6 cyfr. Sprobuj ponownie.", false);
                 return;
-            }
 
-            Console.WriteLine("Potwierdz PIN: ");
-            int cardPinConfirm = Convert.ToInt32(Console.ReadLine());
-
-            if (cardPin != cardPinConfirm)
+            int cardPinConfirm;
+            do
             {
-                Utility.WyswietlWiadomosc("PIN nie zgadza sie. Sprobuj ponownie.", false);
-                return;
-            }
+                cardPinConfirm = Convert.ToInt32(Utility.SzyfrujZnaki("\nPotwierdz PIN: "));
+                if (cardPinConfirm == 0)
+                    return;
+
+                if (cardPin != cardPinConfirm)
+                    Utility.WyswietlWiadomosc("PIN nie zgadza sie. Sprobuj ponownie.", false);
+
+            } while (cardPin != cardPinConfirm); // Jesli PIN sie nie zgadza, powtarzaj
 
             decimal initialBalance = 1000; // Saldo poczatkowe
 
@@ -112,6 +67,38 @@ namespace DesktopAppNicola.Services
             Console.WriteLine($"Numer konta: {accountNumber}");
             Console.WriteLine($"Numer karty: {cardNumber}");
             Console.WriteLine($"Saldo poczatkowe: {initialBalance}\n\n");
+        }
+
+
+        private string WalidujImieINazwisko()
+        {
+            string input;
+            do
+            {
+                Console.WriteLine("Imie i nazwisko: ");
+                input = Console.ReadLine();
+
+                if (string.IsNullOrEmpty(input))
+                    Utility.WyswietlWiadomosc("Imie i nazwisko nie moze byc puste. Sprobuj ponownie.", false);
+
+            } while (string.IsNullOrEmpty(input));
+
+            return input;
+        }
+
+        private int WalidujNumer(string message, Func<int, bool> condition)
+        {
+            int input;
+            do
+            {
+                Console.WriteLine(message);
+                // Jesli nie jest liczba lub nie spelnia warunku
+                if (!int.TryParse(Console.ReadLine(), out input) || !condition(input))
+                    Utility.WyswietlWiadomosc("Niepoprawny format. Sprobuj ponownie.", false);
+
+            } while (!condition(input));
+
+            return input;
         }
 
         public void Dodaj_Nowego_Uzytkownika(string fullName, int accountNumber,

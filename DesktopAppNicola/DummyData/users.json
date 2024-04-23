@@ -1,1 +1,52 @@
-[{"Id":1,"CardNumber":321321,"CardPin":123123,"AccountNumber":654321,"FullName":"Nicola Kaleta","AccountBalance":3220.0,"TotalLogin":0,"IsLocked":false,"Transactions":null},{"Id":2,"CardNumber":222222,"CardPin":474747,"AccountNumber":123456,"FullName":"Jan Kowalski","AccountBalance":3020.0,"TotalLogin":0,"IsLocked":false,"Transactions":null}]
+[
+  {
+    "Id": 1,
+    "CardNumber": 321321,
+    "CardPin": 123123,
+    "AccountNumber": 654321,
+    "FullName": "Nicola Kaleta",
+    "AccountBalance": 3220.0,
+    "TotalLogin": 0,
+    "IsLocked": false
+  },
+  {
+    "Id": 2,
+    "CardNumber": 222222,
+    "CardPin": 474747,
+    "AccountNumber": 123456,
+    "FullName": "Jan Kowalski",
+    "AccountBalance": 3020.0,
+    "TotalLogin": 0,
+    "IsLocked": false
+  },
+  {
+    "Id": 3,
+    "CardNumber": 123098,
+    "CardPin": 123321,
+    "AccountNumber": 131422,
+    "FullName": "Julia Nowak",
+    "AccountBalance": 1000.0,
+    "TotalLogin": 0,
+    "IsLocked": false
+  },
+  {
+    "Id": 4,
+    "CardNumber": 993388,
+    "CardPin": 545454,
+    "AccountNumber": 121212,
+    "FullName": "Jola Elo",
+    "AccountBalance": 1000.0,
+    "TotalLogin": 0,
+    "IsLocked": false
+  },
+  {
+    "Id": 5,
+    "CardNumber": 892444,
+    "CardPin": 123456,
+    "AccountNumber": 142122,
+    "FullName": "djawf asfasf",
+    "AccountBalance": 1000.0,
+    "TotalLogin": 0,
+    "IsLocked": false
+  }
+]

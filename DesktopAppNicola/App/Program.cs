@@ -1,5 +1,4 @@
 ﻿using DesktopAppNicola.Klasy;
-using DesktopAppNicola.Services;
 using DesktopAppNicola.UI;
 
 public class Program
@@ -7,33 +6,19 @@ public class Program
     public List<UserAccount> listaUzytkownikow;
     public UserAccount wybranyUzytkownik;
     public List<Transaction> listaTransakcji;
+    public AppScreen appScreen;
 
-    private readonly UserAuthenticationService _autoryzujService;
 
     public Program()
     {
         InicjalizujDane();
-        _autoryzujService = new UserAuthenticationService(listaUzytkownikow);
-
-        // Przekazanie listyTransakcji do serwisu transakcji
-        var transactionService = new TransactionService(wybranyUzytkownik, listaUzytkownikow, listaTransakcji);
+        appScreen = new AppScreen(this, listaUzytkownikow);
     }
 
     public void Run()
     {
         AppScreen.Powitanie();
-        // Uzycie serwisu autoryzacji uzytkownika
-        wybranyUzytkownik = _autoryzujService.Sprawdz_Num_Karty_Klienta_I_Haslo();
-        AppScreen.Powitaj_Zalogowanego_Uzytkownika(wybranyUzytkownik.FullName);
-
-        // Tworzy nowy obiekt Menu i przekazuje do niego obecny obiekt Program
-        // jako argument konstruktora, poniewaz Menu potrzebuje dostepu do metod
-        // w obiekcie Program
-        while (true) // dopoki user sie nie wyloguje
-        {
-            Menu menu = new Menu(this);
-            menu.StartMenu();
-        }
+        appScreen.Decyzja_Logowania_Lub_Rejestracji();
     }
 
     public void InicjalizujDane()
@@ -74,4 +59,20 @@ public class Program
         // Inicjalizuje liste transakcji jako nowa pusta liste
         listaTransakcji = new List<Transaction>();
     }
+
+    public void Dodaj_Nowego_Uzytkownika(string fullName, int accountNumber,
+                        int cardNumber, int cardPin, decimal initialBalance)
+    {
+        listaUzytkownikow.Add(new UserAccount
+        {
+            Id = listaUzytkownikow.Count + 1, // Automatyczne nadanie ID
+            FullName = fullName,
+            AccountNumber = accountNumber,
+            CardNumber = cardNumber,
+            CardPin = cardPin,
+            AccountBalance = initialBalance,
+            IsLocked = false, // Nowe konto jest domyslnie odblokowane
+        });
+    }
 }
+

@@ -1,10 +1,20 @@
 ﻿using DesktopAppNicola.Klasy;
+using DesktopAppNicola.Services;
 
 namespace DesktopAppNicola.UI
 {
     public class AppScreen
     {
+        private readonly Program program;
+        private readonly LoginService loginService;
         internal const string waluta = "PLN";
+
+        public AppScreen(Program program, List<UserAccount> listaUzytkownikow)
+        {
+            this.program = program;
+            loginService = new LoginService(program, listaUzytkownikow, this);
+        }
+
         internal static void Powitanie()
         {
             Console.Clear();
@@ -20,22 +30,23 @@ namespace DesktopAppNicola.UI
             Console.ReadLine();
         }
 
-        // internal oznacza, ze metoda jest dostepna tylko w tym podzespole (UI)
-        internal static UserAccount UserLoginForm()
+        internal void Decyzja_Logowania_Lub_Rejestracji()
         {
-            // Tymczasowe konto uzytkownika
-            UserAccount tempUserAccount = new UserAccount();
+            Console.WriteLine("\n>>> Wybierz opcje: <<<");
+            Console.WriteLine("1. Zaloguj sie");
+            Console.WriteLine("2. Zarejestruj nowe konto");
 
-            tempUserAccount.CardNumber = Walidacja.Convert<long>("twoj numer karty");
-            tempUserAccount.CardPin = Convert.ToInt32(Utility.SzyfrujZnaki("Wprowadz swoj pin do karty"));
-
-            return tempUserAccount; // Zwroc tymczasowe konto uzytkownika
-        }
-
-        internal static void LoginProgress()
-        {
-            Console.WriteLine("\nSprawdzanie numeru karty i PIN'u...");
-            Utility.WyswietlAnimacjeKropek();
+            int wybor = Walidacja.Convert<int>("decyzje wejscia: ");
+            switch (wybor)
+            {
+                case 1:
+                    loginService.ZalogujSie();
+                    break;
+                default:
+                    Console.WriteLine("Rejestracja nowego konta nie jest jeszcze dostepna w tej wersji programu. Przepraszamy za utrudnienia.");
+                    Console.ReadKey();
+                    break;
+            }
         }
 
         internal static void Wyswietl_Komunikat_O_Zablokowanym_Koncie()
@@ -47,18 +58,6 @@ namespace DesktopAppNicola.UI
             Environment.Exit(1); // Zakoncz program
         }
 
-        internal static void Powitaj_Zalogowanego_Uzytkownika(string fullname)
-        {
-            Console.WriteLine($"Witaj ponownie, {fullname}!");
-            Utility.WcisnijEnterByKontynuowac();
-        }
-
-        internal static void WylogujProgress()
-        {
-            Console.WriteLine("Dziekujemy za skorzystanie z uslug naszego bankomatu!");
-            Utility.WyswietlAnimacjeKropek();
-            Console.Clear();
-        }
 
         internal static int WybierzKwote()
         {

@@ -8,18 +8,16 @@ namespace DesktopAppNicola.UI
                                         "Wyplac pieniadze z konta", "Wykonaj przelew",
                                         "Zobacz wszystkie transakcje", "Wyloguj" };
         static int aktywnaPozycjaMenu = 0; // Zacznij od pierwszej pozycji
-        private Program program;
+        private readonly Program program;
         private readonly AppScreen screen;
         private readonly TransactionService transactionService;
 
-
-
-        public Menu(Program program)
+        public Menu(Program program, LoginService loginService, AppScreen screen)
         {
             this.program = program;
-            screen = new AppScreen(); // Tworzy nowy obiekt AppScreen w celu dostepu do metod w klasie AppScreen
+            this.screen = screen;
             transactionService = new TransactionService(
-                program.wybranyUzytkownik,
+                loginService.wybranyUzytkownik,
                 program.listaUzytkownikow,
                 program.listaTransakcji);
         }
@@ -117,7 +115,7 @@ namespace DesktopAppNicola.UI
                     transactionService.Zobacz_Transakcje();
                     break;
                 case 5:
-                    AppScreen.WylogujProgress();
+                    LoginService.WylogujProgress();
                     Utility.WyswietlWiadomosc("Udane wylogowanie. Prosze wyjac karte z bankomatu");
                     program.Run();
                     break;

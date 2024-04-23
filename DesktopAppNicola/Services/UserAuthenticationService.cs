@@ -4,7 +4,7 @@ using DesktopAppNicola.UI;
 
 namespace DesktopAppNicola.Services
 {
-    public class UserAuthenticationService : IUserLogin
+    public class UserAuthenticationService : IUserAuthentication
     {
         private List<UserAccount> listaUzytkownikow; // Lista kont uzytkownikow
         private UserAccount wybranyUzytkownik; // Wybrany uzytkownik
@@ -20,8 +20,8 @@ namespace DesktopAppNicola.Services
 
             while (czyPoprawnyLogin == false)
             {
-                UserAccount inputAccount = AppScreen.UserLoginForm(); // Pobiera dane z formularza logowania
-                AppScreen.LoginProgress(); // Wyświetla animacje kropek (symulacja logowania)
+                UserAccount inputAccount = LoginService.UserLoginForm(); // Pobiera dane z formularza logowania
+                LoginService.LoginProgress(); // Wyświetla animacje kropek (symulacja logowania)
 
                 // Dla kazdego usera w liscie uzytkownikow, sprawdz czy numer karty i pin sa poprawne
                 foreach (UserAccount uzytkownik in listaUzytkownikow)

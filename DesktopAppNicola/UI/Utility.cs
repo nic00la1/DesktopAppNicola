@@ -50,8 +50,17 @@ namespace DesktopAppNicola.UI
                 else if (inputKey.Key != ConsoleKey.Backspace)
                 // Jesli wcisnieto inny klawisz niz backspace
                 {
-                    input.Append(inputKey.KeyChar); // Dodaj znak do inputu
-                    Console.Write(gwiazdki + "*"); // Wyswietl gwiazdke
+                    if (Char.IsDigit(inputKey.KeyChar)) // Sprawdz czy wprowadzony znak jest cyfra
+                    {
+                        input.Append(inputKey.KeyChar); // Dodaj znak do inputu
+                        Console.Write(gwiazdki + "*"); // Wyswietl gwiazdke
+                    }
+                    else
+                    {
+                        WyswietlWiadomosc("\nProsze wprowadz tylko cyfry", false);
+                        input.Clear();
+                        jestWpisany = true;
+                    }
                 }
             }
             return input.ToString();

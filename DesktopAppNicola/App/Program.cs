@@ -59,20 +59,5 @@ public class Program
         // Inicjalizuje liste transakcji jako nowa pusta liste
         listaTransakcji = new List<Transaction>();
     }
-
-    public void Dodaj_Nowego_Uzytkownika(string fullName, int accountNumber,
-                        int cardNumber, int cardPin, decimal initialBalance)
-    {
-        listaUzytkownikow.Add(new UserAccount
-        {
-            Id = listaUzytkownikow.Count + 1, // Automatyczne nadanie ID
-            FullName = fullName,
-            AccountNumber = accountNumber,
-            CardNumber = cardNumber,
-            CardPin = cardPin,
-            AccountBalance = initialBalance,
-            IsLocked = false, // Nowe konto jest domyslnie odblokowane
-        });
-    }
 }
 

@@ -7,12 +7,14 @@ namespace DesktopAppNicola.UI
     {
         private readonly Program program;
         private readonly LoginService loginService;
+        private readonly RegisterService registerService;
         internal const string waluta = "PLN";
 
         public AppScreen(Program program, List<UserAccount> listaUzytkownikow)
         {
             this.program = program;
             loginService = new LoginService(program, listaUzytkownikow, this);
+            registerService = new RegisterService(listaUzytkownikow);
         }
 
         internal static void Powitanie()
@@ -42,9 +44,12 @@ namespace DesktopAppNicola.UI
                 case 1:
                     loginService.ZalogujSie();
                     break;
+                case 2:
+                    registerService.Registruj_Form();
+                    loginService.ZalogujSie(); // po udanej rejestracji zaloguj uzytkownika
+                    break;
                 default:
-                    Console.WriteLine("Rejestracja nowego konta nie jest jeszcze dostepna w tej wersji programu. Przepraszamy za utrudnienia.");
-                    Console.ReadKey();
+                    Utility.WyswietlWiadomosc("Nieprawidlowa opcja. Sprobuj ponownie", false);
                     break;
             }
         }

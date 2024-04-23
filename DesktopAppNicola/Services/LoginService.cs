@@ -22,6 +22,8 @@ namespace DesktopAppNicola.Services
 
         internal void ZalogujSie()
         {
+            Console.Clear();
+            Console.WriteLine("\n\n>>>Logowanie<<<");
             wybranyUzytkownik = _autoryzujService.Sprawdz_Num_Karty_Klienta_I_Haslo();
             Powitaj_Zalogowanego_Uzytkownika(wybranyUzytkownik.FullName);
 

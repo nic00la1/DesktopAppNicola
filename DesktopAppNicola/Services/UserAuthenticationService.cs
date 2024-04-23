@@ -26,17 +26,15 @@ namespace DesktopAppNicola.Services
                 // Dla kazdego usera w liscie uzytkownikow, sprawdz czy numer karty i pin sa poprawne
                 foreach (UserAccount uzytkownik in listaUzytkownikow)
                 {
-                    wybranyUzytkownik = uzytkownik;
                     // Sprawdza czy numer karty i pin sa poprawne
-                    if (inputAccount.CardNumber.Equals(wybranyUzytkownik.CardNumber))
+                    if (inputAccount.CardNumber.Equals(uzytkownik.CardNumber))
                     {
+                        wybranyUzytkownik = uzytkownik;
                         wybranyUzytkownik.TotalLogin++; // Zwieksza liczbe prob logowania
 
                         // Jesli pin jest poprawny
                         if (inputAccount.CardPin.Equals(wybranyUzytkownik.CardPin))
                         {
-                            wybranyUzytkownik = uzytkownik;
-
                             // Jesli konto jest zablokowane lub liczba prob logowania jest wieksza niz 3
                             if (wybranyUzytkownik.IsLocked || wybranyUzytkownik.TotalLogin > 3)
                             {
@@ -52,21 +50,20 @@ namespace DesktopAppNicola.Services
                                 return wybranyUzytkownik; // Zwraca zautoryzowanego użytkownika
                             }
                         }
-                    }
-                    // Jesli numer karty i pin sa niepoprawne
-                    if (czyPoprawnyLogin == false)
-                    {
-                        Utility.WyswietlWiadomosc("\n Numer karty lub PIN jest niepoprawny. ", false);
-                        // Jesli liczba prob logowania jest wieksza niz 3, zablokuj konto
-                        wybranyUzytkownik.IsLocked = wybranyUzytkownik.TotalLogin == 3;
-
-                        if (wybranyUzytkownik.IsLocked)
+                        else
                         {
-                            AppScreen.Wyswietl_Komunikat_O_Zablokowanym_Koncie();
+                            Utility.WyswietlWiadomosc("\n Numer karty lub PIN jest niepoprawny. ", false);
+                            // Jesli liczba prob logowania jest wieksza niz 3, zablokuj konto
+                            wybranyUzytkownik.IsLocked = wybranyUzytkownik.TotalLogin == 3;
+
+                            if (wybranyUzytkownik.IsLocked)
+                            {
+                                AppScreen.Wyswietl_Komunikat_O_Zablokowanym_Koncie();
+                            }
                         }
                     }
-                    Console.Clear();
                 }
+                Console.Clear();
             }
             return null; // Zwraca null, gdy autoryzacja się nie powiedzie
         }
